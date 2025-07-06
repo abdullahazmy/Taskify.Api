@@ -1,9 +1,12 @@
 ﻿using BrainHope.Services.DTO.Authentication.SignIn;
 using BrainHope.Services.DTO.Authentication.SingUp;
 using BrainHope.Services.DTO.Email;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Taskify.DataAccess.Models;
 using Taskify.Services.DTOs.Responses;
 using Taskify.Services.Interfaces;
@@ -184,6 +187,113 @@ namespace Taskify.Api.Controllers
             await _otpService.RemoveOtpAsync(request.Email);
 
             return Ok(new { message = "Password reset successfully" });
+        }
+
+
+        [HttpGet("GetUserInfo")]
+        [Authorize]
+        public async Task<IActionResult> GetUserInfo()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound(new Response
+                {
+                    IsSuccess = false,
+                    Message = "User not found."
+                });
+            }
+
+            var userInfo = new
+            {
+                user.Id,
+                user.Email,
+                user.UserName,
+                user.FirstName,
+                user.LastName,
+                user.PhoneNumber,
+            };
+
+            return Ok(new GenericResponse<object>
+            {
+                IsSuccess = true,
+                Status = "Success",
+                Message = "User info retrieved successfully.",
+                Data = userInfo
+            });
+        }
+
+
+        [HttpGet("GetAllUsers")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var users = _userManager.Users.Select(u => new
+            {
+                u.Id,
+                u.Email,
+                u.UserName,
+                u.FirstName,
+                u.LastName,
+                u.PhoneNumber,
+            }).ToList();
+
+
+            return Ok(users);
+        }
+
+        [HttpGet("GoogleLogin")]
+        [AllowAnonymous]
+        public IActionResult GoogleLogin()
+        {
+            var properties = new AuthenticationProperties
+            {
+                RedirectUri = Url.Action("GoogleCallback")
+            };
+
+            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+        }
+
+        [HttpGet("GoogleCallback")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GoogleCallback()
+        {
+            var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+            if (!result.Succeeded)
+                return Unauthorized(new Response { Status = "Error", IsSuccess = false, Message = "Google authentication failed." });
+
+            var email = result.Principal.FindFirst(ClaimTypes.Email)?.Value;
+            var googleId = result.Principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var name = result.Principal.Identity?.Name;
+            var profilePictureUrl = result.Principal.FindFirst("picture")?.Value;
+            var location = result.Principal.FindFirst("locale")?.Value;
+
+
+            if (string.IsNullOrEmpty(email))
+                return BadRequest("Google account does not provide an email.");
+
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                user = new ApplicationUser
+                {
+                    UserName = email,
+                    Email = email,
+                    FirstName = name?.Split(' ').FirstOrDefault() ?? "Google",
+                    LastName = name?.Split(' ').Skip(1).FirstOrDefault() ?? "User",
+                    EmailConfirmed = true,
+                };
+
+                var resultCreate = await _userManager.CreateAsync(user);
+                if (!resultCreate.Succeeded)
+                    return StatusCode(500, "Failed to create user from Google account.");
+            }
+
+            var tokenResponse = await _authServices.GetJwtTokenAsync(user);
+            if (!tokenResponse.IsSuccess)
+                return StatusCode(500, tokenResponse);
+
+            return Ok(tokenResponse);
         }
 
 

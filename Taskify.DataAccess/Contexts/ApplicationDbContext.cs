@@ -9,6 +9,10 @@ namespace Taskify.DataAccess.Contexts
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<TaskItem> TaskItems { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<UserProject> UserProjects { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 

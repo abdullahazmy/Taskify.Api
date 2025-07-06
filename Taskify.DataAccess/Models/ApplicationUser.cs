@@ -12,5 +12,8 @@ namespace Taskify.DataAccess.Models
 
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiry { get; set; }
+        public ICollection<UserProject> UserProjects { get; set; }
+
+
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Taskify.Services.Interfaces
+﻿namespace Taskify.Services.Interfaces.Account
 {
     public interface IOtpService
     {

@@ -2,7 +2,7 @@
 using Taskify.DataAccess.Models;
 using Taskify.Services.DTOs.Responses;
 
-namespace Taskify.Services.Interfaces
+namespace Taskify.Services.Interfaces.Account
 {
     public interface IAuthService
     {

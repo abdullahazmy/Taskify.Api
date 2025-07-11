@@ -1,17 +1,17 @@
 ﻿using Taskify.DataAccess.IRepository;
 using Taskify.DataAccess.Models;
-using Taskify.DataAccess.Repsitory;
 
 
 namespace Taskify.DataAccess.IUnitOfWorks
 {
     public interface IUnitOfWork : IDisposable
     {
-        Repository<T> Repository<T>() where T : ModelBase;
+        IRepository<T> Repository<T>() where T : ModelBase;
 
-        Task<int> Complete();
+        Task<int> SaveAsync();
 
 
         IApplicationUserRepository ApplicationUserRepository { get; }
+
     }
 }

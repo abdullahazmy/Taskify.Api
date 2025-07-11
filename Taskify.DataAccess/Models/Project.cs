@@ -1,8 +1,7 @@
 ﻿namespace Taskify.DataAccess.Models
 {
-    public class Project
+    public class Project : ModelBase
     {
-        public string Id { get; set; } = Guid.NewGuid().ToString();
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime Deadline { get; set; }

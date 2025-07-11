@@ -13,27 +13,29 @@ namespace Taskify.DataAccess.UnitOfWorks
 
         public IApplicationUserRepository ApplicationUserRepository { get; private set; }
 
-        private Hashtable _repsitories;
+        private Hashtable _repositories;
         public UnitOfWork(ApplicationDbContext dbcontext)
         {
             this._dbcontext = dbcontext;
-            _repsitories = new Hashtable();
+            _repositories = new Hashtable();
             ApplicationUserRepository = new ApplicationUserRepository(_dbcontext);
         }
-        public Repository<T> Repository<T>() where T : ModelBase
+        public IRepository<T> Repository<T>() where T : ModelBase
         {
-            var Key = typeof(T).Name;
-            if (!_repsitories.ContainsKey(Key))
+            var type = typeof(T).Name;
+
+            if (!_repositories.ContainsKey(type))
             {
-                var repo = new Repository<T>(_dbcontext);
-                _repsitories.Add(Key, repo);
+                var repoInstance = new Repository<T>(_dbcontext);
+                _repositories.Add(type, repoInstance);
             }
-            return _repsitories[Key] as Repository<T>;
+
+            return (IRepository<T>)_repositories[type];
         }
 
 
 
-        public async Task<int> Complete()
+        public async Task<int> SaveAsync()
         {
             return await _dbcontext.SaveChangesAsync();
         }

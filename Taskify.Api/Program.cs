@@ -6,8 +6,8 @@ using Taskify.DataAccess.Contexts;
 using Taskify.DataAccess.Models;
 using Taskify.Infrastructure;
 using Taskify.Services;
-using Taskify.Services.Interfaces;
-using Taskify.Services.Services;
+using Taskify.Services.Interfaces.Account;
+using Taskify.Services.Services.AccountServices;
 using Utilites;
 
 namespace Taskify.Api

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Taskify.DataAccess.Models;
 using Taskify.Services.DTOs.Responses;
-using Taskify.Services.Interfaces;
+using Taskify.Services.Interfaces.Account;
 
 namespace Taskify.Api.Controllers
 {

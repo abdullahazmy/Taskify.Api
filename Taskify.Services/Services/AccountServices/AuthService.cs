@@ -9,10 +9,10 @@ using System.Text;
 using Taskify.DataAccess.Contexts;
 using Taskify.DataAccess.Models;
 using Taskify.Services.DTOs.Responses;
-using Taskify.Services.Interfaces;
+using Taskify.Services.Interfaces.Account;
 using Taskify.Utilities;
 
-namespace Taskify.Services.Services
+namespace Taskify.Services.Services.AccountServices
 {
     public class AuthService : IAuthService
     {

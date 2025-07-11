@@ -1,7 +1,7 @@
 ﻿using StackExchange.Redis;
-using Taskify.Services.Interfaces;
+using Taskify.Services.Interfaces.Account;
 
-namespace Taskify.Services.Services
+namespace Taskify.Services.Services.AccountServices
 {
     public class OtpService : IOtpService
     {

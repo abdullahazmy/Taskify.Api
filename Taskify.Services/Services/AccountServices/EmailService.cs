@@ -2,9 +2,9 @@
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
-using Taskify.Services.Interfaces;
+using Taskify.Services.Interfaces.Account;
 
-namespace Taskify.Services.Services
+namespace Taskify.Services.Services.AccountServices
 {
     public class EmailService : IEmailService
     {

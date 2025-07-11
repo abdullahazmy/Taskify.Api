@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Taskify.Services.Interfaces;
-using Taskify.Services.Services;
+using Taskify.Services.Interfaces.Account;
+using Taskify.Services.Services.AccountServices;
 
 namespace Taskify.Services
 {
